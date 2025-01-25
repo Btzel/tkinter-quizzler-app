@@ -55,6 +55,7 @@ class Interface(QuizBrain):
 
     def show_question(self):
         if self.still_has_questions():
+            self.canvas.config(bg="white")
             current_question = self.next_question()
             category = current_question.category.title()
             difficulty = current_question.difficulty.title()
@@ -69,15 +70,23 @@ class Interface(QuizBrain):
 
     def true_button_event(self):
         user_answer = "True"
-        self.score = self.check_answer(user_answer, self.correct_answer, self.score, self.window)
-        self.update_score()
-        self.show_question()
+        self.score,is_right = self.check_answer(user_answer, self.correct_answer, self.score, self.window)
+        self.give_feedback(is_right)
 
     def false_button_event(self):
         user_answer = "False"
-        self.score = self.check_answer(user_answer, self.correct_answer, self.score, self.window)
+        self.score,is_right = self.check_answer(user_answer, self.correct_answer, self.score, self.window)
+        self.give_feedback(is_right)
+
+
+    def give_feedback(self,is_right):
+        if is_right:
+            self.canvas.config(bg="green")
+        else:
+            self.canvas.config(bg="red")
         self.update_score()
-        self.show_question()
+
+        self.window.after(500,self.show_question)
 
 Interface()
 
